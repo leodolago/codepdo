@@ -1,6 +1,7 @@
 
 <?php
 require_once 'Alunos.php';
+require_once 'ServiceDb.php';
 
 try{
     $conexao = new \PDO("mysql:host=localhost;dbname=projetopdo","root","root");
@@ -11,19 +12,15 @@ try{
 
 };
 
-$aluno = new Alunos($conexao);
+$aluno = new Alunos();
+
+$serviceDb = new ServiceDb($conexao, $aluno);
+
 
 ?>
 
 <html>
 <head>
-    <!--Import Google Icon Font-->
-    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
-
-    <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 <body>
 <h1>Cadastro de Alunos do curso</h1>
@@ -35,10 +32,22 @@ $aluno = new Alunos($conexao);
         </form>
     </div>
     <div style="position: absolute; height: 26px; left: 266px; top:6px;">
-        <form method="post" action="novoaluno.php">
+        <form method="get" action="inclui.php">
             <input type="submit" value="Novo Aluno"><br/><br/>
         </form>
-    </div></div>
+    </div>
+    <div style="position: absolute; height: 26px; left: 366px; top:6px;">
+        <form method="get" action="altera.php">
+            <input type="submit" value="Altera Aluno"><br/><br/>
+        </form>
+    </div>
+    <div style="position: absolute; height: 26px; left: 466px; top:6px;">
+        <form method="get" action="exclui.php">
+            <input type="submit" value="Exclui Aluno"><br/><br/>
+        </form>
+    </div>
+
+</div>
 
 <hr>
 <h2>Lista completa de Alunos</h2>
@@ -49,15 +58,11 @@ $aluno = new Alunos($conexao);
         <div STYLE="margin-left: 50px">
 
             <?php
-            foreach ($aluno->listar("nota") as $alu) {
+            foreach ($serviceDb->listar("nota") as $alu) {
                 echo "Id do Aluno: ".$alu['id']."<br/>Nome: ".$alu['nome']."<br/>Nota: ".$alu['nota'] ?><br><hr><?php ;
             }
             ?>
         </div>
-
-        <!--Import jQuery before materialize.js-->
-        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-        <script type="text/javascript" src="js/materialize.min.js"></script>
 
 </body>
 </html>

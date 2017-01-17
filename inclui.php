@@ -1,5 +1,6 @@
 <?php
 require_once 'Alunos.php';
+require_once 'ServiceDb.php';
 
 try{
     $conexao = new \PDO("mysql:host=localhost;dbname=projetopdo","root","root");
@@ -10,20 +11,22 @@ try{
 
 };
 
-$aluno = new Alunos($conexao);
+$aluno = new Alunos();
 
 $aluno->setNome($_POST['nome'])
-    ->setNota($_POST['nota']);
+       ->setNota($_POST['nota']);
 
-$resultado = $aluno->inserir();
+$serviceDb = new ServiceDb($conexao, $aluno);
+
+$serviceDb->inserir();
 
 ?>
 
 <h4> Inclui um novo aluno:</h4>
 <hr>
 <form method="post" >
-    <p>Nome: <input type="text" name="nome" value="<?php echo $resultado['nome']?>" /></p>
-    <p>Nota: <input type="text" name="nota" value="<?php echo $resultado['nota']?>" /></p>
+    <p>Nome: <input type="text" name="nome" value="" /></p>
+    <p>Nota: <input type="text" name="nota" value="" /></p>
     <input type="submit" value="Incluir">
 </form>
 <hr>

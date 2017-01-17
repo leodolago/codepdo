@@ -1,5 +1,6 @@
 <?php
 require_once 'Alunos.php';
+require_once 'ServiceDb.php';
 
 try{
     $conexao = new \PDO("mysql:host=localhost;dbname=projetopdo","root","root");
@@ -10,10 +11,10 @@ try{
 
 };
 
-$aluno = new Alunos($conexao);
+$aluno = new Alunos();
+$serviceDb = new ServiceDb($conexao, $aluno);
 
-
-$resultado = $aluno->deletar($_GET['id']);
+$serviceDb->deletar($_GET['id']);
 
 ?>
 
@@ -28,12 +29,12 @@ $resultado = $aluno->deletar($_GET['id']);
     <input type="submit" value="<-- voltar para lista">
 </form>
 
-<h4>Lista de Alunos </h4>
+<h4>Lista de Alunos</h4>
 
         <div STYLE="margin-left: 50px">
 
             <?php
-            foreach ($aluno->listar("nome") as $alu) {
+            foreach ($serviceDb->listar("nome") as $alu) {
                 echo "Id do Aluno: ".$alu['id']."<br/>Nome: ".$alu['nome']."<br/>Nota: ".$alu['nota'] ?><br><hr><?php ;
             }
             ?>

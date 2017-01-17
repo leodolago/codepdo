@@ -1,6 +1,7 @@
 
 <?php
 require_once 'Alunos.php';
+require_once 'ServiceDb.php';
 
 try{
     $conexao = new \PDO("mysql:host=localhost;dbname=projetopdo","root","root");
@@ -11,7 +12,11 @@ try{
 
 };
 
-$aluno = new Alunos($conexao);
+$aluno = new Alunos();
+
+$serviceDb = new ServiceDb($conexao, $aluno);
+
+
 
 ?>
 
@@ -54,7 +59,7 @@ $aluno = new Alunos($conexao);
         <div STYLE="margin-left: 50px">
 
             <?php
-            foreach ($aluno->listar("nome") as $alu) {
+            foreach ($serviceDb->listar("nome") as $alu) {
                 echo "Id do Aluno: ".$alu['id']."<br/>Nome: ".$alu['nome']."<br/>Nota: ".$alu['nota'] ?><br><hr><?php ;
              }
             ?>
