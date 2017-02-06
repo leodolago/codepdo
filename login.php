@@ -1,21 +1,26 @@
 <?php
 
-require_once 'conecta.php';
-require_once 'Alunos.php';
-require_once 'ServiceDb.php';
+session_start();
+require 'conecta.php';
 
+if(isset($_POST['usuario']) && empty($_POST['usuario']) == false){
 
-if(isset($_POST['nome']) && empty($_POST['nome']) == false){
+    $user = addslashes($_POST['usuario']);
+    $pass = addslashes($_POST['senha']);
 
-    $aluno = new Alunos();
-    $aluno->setNome(addslashes($_POST['nome']))
-    ->setNota(addslashes($_POST['nota']));
+    $sql = "SELECT * FROM usuarios WHERE usuario = '$user' AND senha = '$pass' ";
+    $resultado = $conexao->query($sql);
 
-    $serviceDb = new ServiceDb($conexao, $aluno);
-    $serviceDb->inserir();
+    if($resultado->rowCount() > 0){
+        $dado = $resultado->fetch();
 
-    header("Location: index.php");
+        $_SESSION['id'] = $dado['id'];
+        header("Location: index.php");
 
+    } else {
+
+        echo "Usuário ou senha invalido";
+    }
 }
 
 ?>
@@ -38,35 +43,32 @@ if(isset($_POST['nome']) && empty($_POST['nome']) == false){
 <div class="row">
     <div class="col s4"></div>
     <div class="col s4">
-        <form method="post">
+        <form method="POST">
             <div class="row">
                 <div class="col s12">
-                    <h4>Incluir novo aluno</h4>
+                    <h4>Login</h4>
                 </div>
                 <div class="input-field col s12">
-                    <input id="nom" type="text" class="validate" name="nome">
-                    <label for="nom">Nome</label>
+                    <input id="text" type="text" class="validate" name="usuario">
+                    <label for="password">Usuario</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <input id="not" type="text" class="validate" name="nota">
-                    <label for="not">Nota</label>
+                    <input id="text" type="password" class="validate" name="senha">
+                    <label for="email">Senha</label>
                 </div>
             </div>
             <div class="input-field col s12">
-                <button class="btn waves-effect waves-light" type="submit" name="action">Incluir
+                <button class="btn waves-effect waves-light" type="submit" name="action">Login
                     <i class="material-icons right">send</i>
                 </button>
             </div>
         </form>
-        <form method="" action="index.php">
-        <div class="input-field col s12">
-            <button class="btn waves-effect waves-light" type="submit" name="action">Voltar para lista
-                <i class="material-icons left">arrow_back</i>
-            </button>
+        <div class="row"></div>
+        <div class="col s12">
+            <a href="cadastrousuario.php">Cadastrar novo usuário</a>
         </div>
-        </form>
     </div>
     <div class="col s4"></div>
 </div>

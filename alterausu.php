@@ -1,8 +1,8 @@
 <?php
 
 require_once 'conecta.php';
-require_once 'Alunos.php';
-require_once 'ServiceDb.php';
+require_once 'Usuarios.php';
+require_once 'ServiceDbUser.php';
 
 $id = 0;
 
@@ -10,28 +10,27 @@ if(isset($_GET['id']) && empty($_GET['id']) == false){
 
     $id = addslashes($_GET['id']);
 
+    if(isset($_POST['usuario']) && empty($_POST['usuario'] == false)) {
 
-    if(isset($_POST['nome']) && empty($_POST['nome'] == false)) {
+        $usuario = new Usuarios();
 
-        $aluno = new Alunos();
+        $usuario->setId(addslashes($_POST['id']))
+            ->setUsuario(addslashes($_POST['usuario']))
+            ->setSenha(addslashes($_POST['senha']));
 
-        $aluno->setId(addslashes($_POST['id']))
-            ->setNome(addslashes($_POST['nome']))
-            ->setNota(addslashes($_POST['nota']));
+        $serviceDbUser = new ServiceDbUser($conexao, $usuario);
 
-        $serviceDb = new ServiceDb($conexao, $aluno);
+        $serviceDbUser->alterar();
 
-        $serviceDb->alterar();
-
-        header("location: index.php");
+        header("location: cadastrousuario.php");
 
     }
 
-    $aluno = new Alunos();
+    $usuario = new Usuarios();
 
-    $serviceDb = new ServiceDb($conexao, $aluno);
+    $serviceDbUser = new ServiceDbUser($conexao, $usuario);
 
-    $resultado = $serviceDb->find($_GET['id'],'');
+    $resultado = $serviceDbUser->find($_GET['id']);
 
     if($resultado > 0){
 
@@ -39,7 +38,7 @@ if(isset($_GET['id']) && empty($_GET['id']) == false){
 
     } else {
 
-        header("Location: index.php");
+        header("Location: cadastrousuario.php");
 
     }
 
@@ -75,13 +74,13 @@ if(isset($_GET['id']) && empty($_GET['id']) == false){
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <input id="not" type="text" class="validate" name="nome" value="<?php echo $resultado['nome'] ?>">
+                    <input id="not" type="text" class="validate" name="usuario" value="<?php echo $resultado['usuario'] ?>">
                     <label for="not">Nome</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <input id="not" type="text" class="validate" name="nota" value="<?php echo $resultado['nota'] ?>">
+                    <input id="not" type="text" class="validate" name="senha" value="<?php echo $resultado['senha'] ?>">
                     <label for="not">Nota</label>
                 </div>
             </div>
@@ -91,7 +90,7 @@ if(isset($_GET['id']) && empty($_GET['id']) == false){
                 </button>
             </div>
         </form>
-        <form method="" action="index.php">
+        <form method="" action="cadastrousuario.php">
             <div class="input-field col s12">
                 <button class="btn waves-effect waves-light" type="submit" name="action">Voltar para lista
                     <i class="material-icons left">arrow_back</i>

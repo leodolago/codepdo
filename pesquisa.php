@@ -1,61 +1,86 @@
 <?php
+
+session_start();
+
 require_once 'Alunos.php';
 require_once 'ServiceDb.php';
+require_once 'conecta.php';
 
-try{
-    $conexao = new \PDO("mysql:host=localhost;dbname=projetopdo","root","root");
+if(isset($_SESSION['id']) && empty($_SESSION['id']) == false){
 
-} catch (\PDOException $e){
+} else {
+    header("Location: login.php");
+}
 
-    echo "Não foi possível estabelecer a conexão com o banco de dados:Erro código ".$e->getCode().": ".$e->getMessage();
-
-};
-
-
-// Aqui funciona
 $aluno = new Alunos();
 
 $serviceDb = new ServiceDb($conexao, $aluno);
 
-$resultado = $serviceDb->find($_GET['search']);
-
-
+$resultado = $serviceDb->find($_GET['search'], $_GET['search']);
 
 ?>
- <h4> Aluno pesquisado:</h4>
- <hr>
- <form method="get">
- <p>Id do Aluno: <?php echo $resultado['id'];?> </p>
- <p>Nome: <?php echo $resultado['nome']?> </p>
- <p>Nota: <?php echo $resultado['nota']?> </p>
- </form>
- <hr>
- <form method="" action="index.php">
-    <input type="submit" value="<-- voltar para lista">
-</form>
 
+<html>
+<head>
 
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
 
-<?php
-/*Aqui nao funciona ------------------------------------
-$aluno = new Alunos();
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-$serviceDb = new ServiceDb($conexao, $aluno);
+</head>
+<body>
 
-$serviceDb->find($_GET['search']);
+<div class="row">
+    <div class="col s4"></div>
+    <div class="col s4">
+        <form method="post">
+            <div class="row">
+                <div class="col s12">
+                    <h4>Aluno Pesquisado</h4>
+                </div>
+                <div class="input-field col s12">
+                    <input id="ids" type="text" class="validate" name="id"  disabled value="<?php echo $resultado['id'] ?>">
+                    <label for="ids">Id</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="not" type="text" class="validate" name="nome" disabled value="<?php echo $resultado['nome'] ?>">
+                    <label for="not">Nome</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="not" type="text" class="validate" name="nota" disabled value="<?php echo $resultado['nota'] ?>">
+                    <label for="not">Nota</label>
+                </div>
+            </div>
+        </form>
+            <div class="input-field col s12">
+                <a class="btn waves-effect waves-light" type="submit" name="action" <?php echo 'href="altera.php?id='.$resultado['id'].'" ' ?> >Alterar
+                    <i class="material-icons right">send</i>
+                </a>
+            </div>
+        </form>
+        <form method="" action="index.php">
+            <div class="input-field col s12">
+                <button class="btn waves-effect waves-light" type="submit" name="action">Voltar para lista
+<i class="material-icons left">arrow_back</i>
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="col s4"></div>
+</div>
 
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
 
-
-?>
-<h4> Aluno pesquisado:</h4>
-<hr>
-<form method="get">
-    <p>Id do Aluno: <?php echo $serviceDb['id'];?> </p>
-    <p>Nome: <?php echo $serviceDb['nome']?> </p>
-    <p>Nota: <?php echo $serviceDb['nota']?> </p>
-</form>
-<hr>
-<form method="" action="index.php">
-    <input type="submit" value="<-- voltar para lista">
-</form>
-*/
+</body>
+</html>

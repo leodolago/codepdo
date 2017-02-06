@@ -1,6 +1,5 @@
 <?php
 
-
 class ServiceDb
 {
     private $db;
@@ -12,11 +11,12 @@ class ServiceDb
         $this->alunos = $alunos;
     }
 
-public function find($id){
+public function find($id, $nome){
 
-    $query = "Select * from alunos where id=:id ";
+    $query = "Select * from alunos where id=:id OR nome=:nome";
     $stmt = $this->db->prepare($query);
     $stmt->bindValue(":id", $id);
+    $stmt->bindValue(":nome", $nome);
     $stmt->execute();
 
     return $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -78,6 +78,5 @@ public function deletar($id){
     }
 
 }
-
 
 }

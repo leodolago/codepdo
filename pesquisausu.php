@@ -1,28 +1,19 @@
 <?php
 
+require_once 'Usuarios.php';
+require_once 'ServiceDbUser.php';
 require_once 'conecta.php';
-require_once 'Alunos.php';
-require_once 'ServiceDb.php';
 
+$usuario = new Usuarios();
 
-if(isset($_POST['nome']) && empty($_POST['nome']) == false){
+$serviceDbUser = new ServiceDbUser($conexao, $usuario);
 
-    $aluno = new Alunos();
-    $aluno->setNome(addslashes($_POST['nome']))
-    ->setNota(addslashes($_POST['nota']));
-
-    $serviceDb = new ServiceDb($conexao, $aluno);
-    $serviceDb->inserir();
-
-    header("Location: index.php");
-
-}
+$resultado = $serviceDbUser->find($_GET['search']);
 
 ?>
 
 <html>
 <head>
-
 
     <!--Import Google Icon Font-->
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -31,7 +22,6 @@ if(isset($_POST['nome']) && empty($_POST['nome']) == false){
 
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
 </head>
 <body>
 
@@ -41,31 +31,37 @@ if(isset($_POST['nome']) && empty($_POST['nome']) == false){
         <form method="post">
             <div class="row">
                 <div class="col s12">
-                    <h4>Incluir novo aluno</h4>
+                    <h4>Usuario Pesquisado</h4>
                 </div>
                 <div class="input-field col s12">
-                    <input id="nom" type="text" class="validate" name="nome">
-                    <label for="nom">Nome</label>
+                    <input id="ids" type="text" class="validate" name="id"  disabled value="<?php echo $resultado['id'] ?>">
+                    <label for="ids">Id</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <input id="not" type="text" class="validate" name="nota">
+                    <input id="not" type="text" class="validate" name="usuario" disabled value="<?php echo $resultado['usuario'] ?>">
+                    <label for="not">Nome</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="not" type="text" class="validate" name="senha" disabled value="<?php echo $resultado['senha'] ?>">
                     <label for="not">Nota</label>
                 </div>
             </div>
+        </form>
             <div class="input-field col s12">
-                <button class="btn waves-effect waves-light" type="submit" name="action">Incluir
+                <a class="btn waves-effect waves-light" type="submit" name="action" <?php echo 'href="alterausu.php?id='.$resultado['id'].'" ' ?> >Alterar
                     <i class="material-icons right">send</i>
+                </a>
+            </div>
+        <form method="" action="cadastrousuario.php">
+            <div class="input-field col s12">
+                <button class="btn waves-effect waves-light" type="submit" name="action">Voltar para lista
+                    <i class="material-icons left">arrow_back</i>
                 </button>
             </div>
-        </form>
-        <form method="" action="index.php">
-        <div class="input-field col s12">
-            <button class="btn waves-effect waves-light" type="submit" name="action">Voltar para lista
-                <i class="material-icons left">arrow_back</i>
-            </button>
-        </div>
         </form>
     </div>
     <div class="col s4"></div>

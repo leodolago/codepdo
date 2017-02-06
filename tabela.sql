@@ -6,6 +6,15 @@ CREATE TABLE `projetopdo`.`alunos`(
 `nota` INT
 );
 
+CREATE TABLE `projetopdo`.`usuarios` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `usuario` VARCHAR(45) NOT NULL,
+  `senha` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`));
+
+INSERT INTO `projetopdo`.`usuarios` (`usuario`,`senha`) VALUES ('admin','admin');
+
+
 INSERT INTO `projetopdo`.`alunos` (`nome`,`nota`) VALUES ('Luiz','10');
 INSERT INTO `projetopdo`.`alunos` (`nome`,`nota`) VALUES ('Luiza','5');
 INSERT INTO `projetopdo`.`alunos` (`nome`,`nota`) VALUES ('Livia','6');
