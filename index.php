@@ -7,18 +7,15 @@ require 'conecta.php';
 require_once 'Alunos.php';
 require_once 'ServiceDb.php';
 
-if(isset($_SESSION['id']) && empty($_SESSION['id']) == false){
-
-} else {
+if(!isset($_SESSION['id']) && !empty($_SESSION['id']) == false){
     header("Location: login.php");
 }
 
+
+$listar = "nome";
 $aluno = new Alunos();
 
 $serviceDb = new ServiceDb($conexao, $aluno);
-
-$listar = 'nome';
-
 
 $listar = $_GET['lista'];
 
